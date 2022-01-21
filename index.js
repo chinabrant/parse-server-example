@@ -7,7 +7,8 @@ const path = require('path');
 const args = process.argv || [];
 const test = args.some(arg => arg.includes('jasmine'));
 
-const databaseUri = process.env.DATABASE_URI || process.env.MONGODB_URI;
+// const databaseUri = process.env.DATABASE_URI || process.env.MONGODB_URI;
+const databaseUri = "mongodb://localhost/test"
 
 if (!databaseUri) {
   console.log('DATABASE_URI not specified, falling back to localhost.');
@@ -16,7 +17,7 @@ const config = {
   databaseURI: databaseUri || 'mongodb://localhost:27017/dev',
   cloud: process.env.CLOUD_CODE_MAIN || __dirname + '/cloud/main.js',
   appId: process.env.APP_ID || 'myAppId',
-  masterKey: process.env.MASTER_KEY || '', //Add your master key here. Keep it secret!
+  masterKey: process.env.MASTER_KEY || 'xx', //Add your master key here. Keep it secret!
   serverURL: process.env.SERVER_URL || 'http://localhost:1337/parse', // Don't forget to change to https if needed
   liveQuery: {
     classNames: ['Posts', 'Comments'], // List of classes to support for query subscriptions
@@ -26,7 +27,29 @@ const config = {
 // If you wish you require them, you can set them as options in the initialization above:
 // javascriptKey, restAPIKey, dotNetKey, clientKey
 
+var ParseDashboard = require('parse-dashboard');
+
+var dashboard = new ParseDashboard({
+  apps: [
+    {
+      appId: 'myAppId',
+      masterKey: 'xx',
+      serverURL: 'http://localhost:1337/parse',
+      appName: 'TestApp'
+    }
+  ],
+  users: [
+    {
+      user: "brant",
+      pass: "123456"
+    }
+  ]
+}, true);
+
+
 const app = express();
+
+app.use('/dash', dashboard);
 
 // Serve static assets from the /public folder
 app.use('/public', express.static(path.join(__dirname, '/public')));
