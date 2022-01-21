@@ -40,8 +40,8 @@ var dashboard = new ParseDashboard({
   ],
   users: [
     {
-      user: "brant",
-      pass: "123456"
+      user: "",
+      pass: ""
     }
   ]
 }, true);
